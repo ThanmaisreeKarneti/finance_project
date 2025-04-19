@@ -1,0 +1,17 @@
+{% extends 'finance/dashboard.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3>🔔 Notifications</h3>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mt-3" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
+
+{% endblock %}

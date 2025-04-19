@@ -1,0 +1,96 @@
+{% extends 'finance/dashboard.html' %}
+{% block content %}
+
+<h2>Recent Activities</h2>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  th, td {
+    padding: 14px 20px;
+    text-align: left;
+  }
+
+  thead {
+    background-color: #f5f5f5;
+    color: #333;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+
+  tbody tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  th {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .type-income {
+    color: #2e7d32;
+    font-weight: bold;
+  }
+
+  .type-expense {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+
+  .amount {
+    font-weight: 500;
+  }
+
+  .category {
+    color: #673ab7;
+  }
+</style>
+
+<table>
+  <thead>
+    <tr>
+      <th>S.no</th>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Amount (₹)</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaction in transactions %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ transaction.date }}</td>
+      <td class="type-{{ transaction.type }}">{{ transaction.type|title }}</td>
+      <td class="amount {% if transaction.type == 'income' %}type-income{% else %}type-expense{% endif %}">
+        ₹{{ transaction.amount }}
+      </td>
+      <td class="category">
+        {% if transaction.type == 'expense' %}
+          {{ transaction.category.name }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5" style="text-align: center; color: gray;">No recent activity yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

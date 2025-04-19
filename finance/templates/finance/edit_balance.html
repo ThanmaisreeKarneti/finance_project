@@ -1,0 +1,73 @@
+{% extends 'finance/dashboard.html' %}
+
+{% block content %}
+<style>
+  .edit-balance-box {
+    padding: 30px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #fef9c3, #dbeafe);
+    width: 80%;
+    max-width: 450px;
+    margin: 50px auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .edit-balance-box h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+  }
+
+  .edit-balance-box label {
+    display: block;
+    font-size: 16px;
+    color: #475569;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  .edit-balance-box input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+  }
+
+  .edit-balance-box input[type="number"]:focus {
+    border-color: #3b82f6;
+    outline: none;
+  }
+
+  .btn.save {
+    background-color: #22c55e;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn.save:hover {
+    background-color: #16a34a;
+  }
+</style>
+
+<div class="edit-balance-box">
+  <h2>Edit Wallet Balance</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="balance">New Balance:</label>
+    <input type="number" step="0.01" name="balance" value="{{ wallet.balance }}">
+    <button type="submit" class="btn save">Save</button>
+  </form>
+</div>
+
+{% endblock %}

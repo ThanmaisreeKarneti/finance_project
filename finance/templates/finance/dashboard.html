@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Personal Finance</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .dashboard {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background-color: #1e1e2f;
+      color: white;
+      width: 80px;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sidebar.expanded {
+      width: 240px;
+    }
+
+    .sidebar .toggle-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      padding: 20px;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      background-color: #28e97b;
+      border-radius: 50%;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      display: none;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .sidebar.expanded .logo-text {
+      display: inline;
+    }
+
+    .nav-list {
+      margin-top: 30px;
+      list-style: none;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      gap: 15px;
+      transition: background 0.3s;
+    }
+
+    .nav-item a:hover,
+    .nav-item.active a {
+      background-color: #28e97b;
+      color: black;
+      border-radius: 10px;
+    }
+
+    .nav-label {
+      display: none;
+    }
+
+    .sidebar.expanded .nav-label {
+      display: inline;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      background: #555;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .nav-item:hover .tooltip {
+      opacity: 1;
+    }
+
+    /* Main content */
+    .content {
+      flex: 1;
+      background-color: #f3f3f3;
+      padding: 40px;
+      overflow-y: auto;
+    }
+    .sidebar ul {
+  list-style-type: none; /* Removes the bullet dots */
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  list-style-type: none; /* Also ensures no bullets per li */
+}
+
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="sidebar" id="sidebar">
+      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+      <div class="logo">
+        <div class="logo-icon">💰</div>
+        <div class="logo-text">Finance</div>
+      </div>
+
+      <li class="nav-item {% if request.resolver_match.url_name == 'wallet' %}active{% endif %}">
+        <a href="{% url 'wallet' %}">💼<span class="nav-label">My Wallet</span></a>
+        <span class="tooltip">My Wallet</span>
+      </li>
+      
+      <li class="nav-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+        <a href="{% url 'settings' %}">⚙️<span class="nav-label">Settings</span></a>
+        <span class="tooltip">Settings</span>
+      </li>
+      
+      <li class="nav-item {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}">
+        <a href="{% url 'notifications' %}">🔔<span class="nav-label">Notifications</span></a>
+        <span class="tooltip">Notifications</span>
+      </li>
+      
+      <li class="nav-item {% if request.resolver_match.url_name == 'overview' %}active{% endif %}">
+        <a href="{% url 'overview' %}">📊<span class="nav-label">Overview</span></a>
+        <span class="tooltip">Overview</span>
+      </li>
+      
+      <li class="nav-item {% if request.resolver_match.url_name == 'activities' %}active{% endif %}">
+        <a href="{% url 'activities' %}">📂<span class="nav-label">Recent Activities</span></a>
+        <span class="tooltip">Recent Activities</span>
+      </li>
+      
+      <li class="nav-item {% if request.resolver_match.url_name == 'profit_loss' %}active{% endif %}">
+        <a href="{% url 'profit_loss' %}">📈<span class="nav-label">Profit / Loss</span></a>
+        <span class="tooltip">Profit / Loss</span>
+      </li>
+      
+      <li class="nav-item">
+        <a href="{% url 'logout' %}">🚪<span class="nav-label">Logout</span></a>
+        <span class="tooltip">Logout</span>
+      </li>
+      
+    </div>
+
+    <div class="content">
+      {% block content %}
+      <h1> Hello  {{ user.username }}!</h1>
+      <p>Select any option from the sidebar to get started.</p>
+      {% endblock %}
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('expanded');
+    }
+  </script>
+</body>
+</html>

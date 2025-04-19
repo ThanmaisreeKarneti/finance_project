@@ -1,0 +1,183 @@
+{% extends 'finance/dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .summary-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .summary-card {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    color: #333;
+  }
+
+  h2, h3 {
+    color: #333;
+  }
+
+  .chart-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  .chart-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+  }
+
+  .progress-ring-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+  }
+
+  .progress-ring {
+    transform: rotate(-90deg);
+  }
+
+  .progress-bg {
+    fill: transparent;
+    stroke: #eee;
+    stroke-width: 15;
+  }
+
+  .progress-bar {
+    fill: transparent;
+    stroke-width: 15;
+    stroke-dasharray: 377;
+    stroke-dashoffset: 377;
+    transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;
+    stroke-linecap: round;
+  }
+
+  .percentage-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .left-col, .right-col {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  canvas {
+    min-height: 300px;
+    height: 400px !important;
+  }
+</style>
+
+<h2>📊 Analysis Summary</h2>
+<br>
+
+<!-- Summary Cards -->
+<div class="summary-container">
+  <div class="summary-card">
+    <h3>Monthly Spend</h3>
+    <p style="font-size: 24px;">₹{{ monthly_spent }}</p>
+  </div>
+  <div class="summary-card">
+    <h3>Total Spent</h3>
+    <p style="font-size: 24px;">₹{{ total_spent }}</p>
+  </div>
+  <div class="summary-card">
+    <h3>Current Balance</h3>
+    <p style="font-size: 24px;">₹{{ balance }}</p>
+  </div>
+</div>
+
+<!-- Add this hidden div for JS data -->
+<div id="profit-loss-data"
+     data-profit="{{ profit_percentage }}"
+     data-loss="{{ loss_percentage }}"
+     style="display: none;"></div>
+
+<!-- Charts Section -->
+<div class="chart-wrapper">
+  <!-- LEFT COLUMN -->
+  <div class="left-col">
+    <!-- Profit Ring -->
+    <div class="chart-container">
+      <h3 style="text-align: center;">📈 Profit Percentage</h3>
+      <div class="progress-ring-wrapper">
+        <svg width="150" height="150" class="progress-ring">
+          <circle class="progress-bg" cx="75" cy="75" r="60" />
+          <circle class="progress-bar" cx="75" cy="75" r="60" id="profit-ring" />
+        </svg>
+        <div class="percentage-text">{{ profit_percentage }}%</div>
+      </div>
+    </div>
+
+    <!-- Loss Ring -->
+    <div class="chart-container">
+      <h3 style="text-align: center;">📉 Loss Percentage</h3>
+      <div class="progress-ring-wrapper">
+        <svg width="150" height="150" class="progress-ring">
+          <circle class="progress-bg" cx="75" cy="75" r="60" />
+          <circle class="progress-bar" cx="75" cy="75" r="60" id="loss-ring" />
+        </svg>
+        <div class="percentage-text">{{ loss_percentage }}%</div>
+      </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="chart-container">
+      <h3>📊 Monthly Expenses - Bar Chart</h3>
+      <canvas id="bargraph"
+        data-labels='{{ bar_labels|safe }}'
+        data-values='{{ bar_data|safe }}'>
+      </canvas>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-col">
+    <!-- Pie Chart -->
+    <div class="chart-container">
+      <h3>💸 Income vs Expense - Pie Chart</h3>
+      <canvas id="pieChart"
+        data-labels='{{ pie_labels|safe }}'
+        data-values='{{ pie_data|safe }}'>
+      </canvas>
+    </div>
+
+    <!-- Line Chart -->
+    <div class="chart-container">
+      <h3>📈 Last Months Expenses </h3>
+      <canvas id="linegraph"
+        data-labels='{{ line_labels|safe }}'
+        data-values='{{ line_data|safe }}'>
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/charts.js' %}"></script>
+<script src="{% static 'js/rings.js' %}"></script>
+
+{% endblock %}

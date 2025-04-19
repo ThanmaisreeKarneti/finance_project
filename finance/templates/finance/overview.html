@@ -1,0 +1,113 @@
+{% extends 'finance/dashboard.html' %}
+{% load static %}
+{% block content %}
+<h2>Overview</h2>
+
+<style>
+  .chart-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    width: 100%;
+  }
+
+  .overview-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .left-column {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+  }
+
+  .right-column {
+    flex: 2;
+    min-width: 300px;
+  }
+
+  .expense-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+    margin-bottom: 30px;
+  }
+
+  .expense-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .expense-box li {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f9f9f9;
+    margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  canvas {
+    min-height: 300px;
+    max-height: 400px;
+  }
+</style>
+
+<!-- Layout Starts -->
+<div class="overview-columns">
+  
+  <!-- LEFT COLUMN -->
+  <div class="left-column">
+    <!-- Your Expense -->
+    <div class="expense-box">
+      <h2 style="margin-bottom: 16px;">Your Expense:</h2>
+      <ul>
+        {% for category, amount in expense_summary.items %}
+          <li>
+            <span>{{ category }}</span>
+            <span style="color: red;">₹{{ amount }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Pie Chart BELOW the expense box -->
+    <div class="chart-container">
+      <h3>💸 Income vs Expense - Pie Chart</h3>
+      <canvas id="pieChart"
+        data-labels='{{ pie_labels|safe }}' 
+        data-values='{{ pie_data|safe }}'>
+      </canvas>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-column">
+    <div class="chart-container">
+      <h3>📊 Monthly Expenses - Bar Chart</h3>
+      <canvas id="bargraph"
+        data-labels='{{ bar_labels|safe }}'
+        data-values='{{ bar_data|safe }}'>
+      </canvas>
+    </div>
+
+    <!-- Line Chart BELOW the bar graph -->
+    <div class="chart-container">
+      <h3>📈 Last  Months Expenses </h3>
+      <canvas id="linegraph"
+        data-labels='{{ line_labels|safe }}'
+        data-values='{{ line_data|safe }}'>
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/charts.js' %}"></script>
+{% endblock %}
